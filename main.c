@@ -1,7 +1,7 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #ifndef N
 #define N 9
@@ -28,11 +28,15 @@ bool SolveSudoku(int board[N][N]);
 int main(int argc, char *argv[])
 {
     int board[N][N] = {
-        {5, 3, 0, 0, 7, 0, 0, 0, 0}, {6, 0, 0, 1, 9, 5, 0, 0, 0},
-        {0, 9, 8, 0, 0, 0, 0, 6, 0}, {8, 0, 0, 0, 6, 0, 0, 0, 3},
-        {4, 0, 0, 8, 0, 3, 0, 0, 1}, {7, 0, 0, 0, 2, 0, 0, 0, 6},
-        {0, 6, 0, 0, 0, 0, 2, 8, 0}, {0, 0, 0, 4, 1, 9, 0, 0, 5},
-        {0, 0, 0, 0, 8, 0, 0, 7, 9},
+        {5, 3, 0, 0, 7, 0, 0, 0, 0},
+        {6, 0, 0, 1, 9, 5, 0, 0, 0},
+        {0, 9, 8, 0, 0, 0, 0, 6, 0},
+        {8, 0, 0, 0, 6, 0, 0, 0, 3},
+        {4, 0, 0, 8, 0, 3, 0, 0, 1},
+        {7, 0, 0, 0, 2, 0, 0, 0, 6},
+        {0, 6, 0, 0, 0, 0, 2, 8, 0},
+        {0, 0, 0, 4, 1, 9, 0, 0, 5},
+        {0, 0, 0, 0, 8, 0, 0, 7, 9}
     };
 
     printf("Initial Sudoku puzzle:\n");
@@ -43,7 +47,7 @@ int main(int argc, char *argv[])
 
     if (SolveSudoku(board))
     {
-        printf("\nSovled Sudoku puzzle:\n");
+        printf("\nSolved Sudoku puzzle:\n");
         PrintBoard(board);
     }
     else
@@ -89,13 +93,13 @@ IntPairList CreateE(void)
             b = k % 3;
             if (b == 0)
                 b = 3;
-            // Same row
+            /* Same row */
             for (l = k + 1; l <= 9; l++)
                 AddPair(&E, i, i + l - k);
-            // Same column
+            /* Same column */
             for (l = j + 1; l <= 9; l++)
                 AddPair(&E, i, (l - 1) * 9 + k);
-            // Same 3x3 block
+            /* Same 3x3 block */
             if (a != 3)
             {
                 if (b != 3)
@@ -118,7 +122,7 @@ IntPairList CreateE(void)
                     AddPair(&E, i, (j + 1) * 9 + k + 1);
                 }
                 else
-                {
+                { /* b == 3 */
                     AddPair(&E, i, (j + 1) * 9 + k - 2);
                     AddPair(&E, i, (j + 1) * 9 + k - 1);
                     AddPair(&E, i, (j + 1) * 9 + k);
@@ -126,7 +130,6 @@ IntPairList CreateE(void)
             }
             if (a == 1)
             {
-
                 if (b == 1)
                 {
                     AddPair(&E, i, (j + 2) * 9 + k);
@@ -140,7 +143,7 @@ IntPairList CreateE(void)
                     AddPair(&E, i, (j + 2) * 9 + k + 1);
                 }
                 else
-                {
+                { /* b == 3 */
                     AddPair(&E, i, (j + 2) * 9 + k - 2);
                     AddPair(&E, i, (j + 2) * 9 + k - 1);
                     AddPair(&E, i, (j + 2) * 9 + k);
@@ -151,9 +154,9 @@ IntPairList CreateE(void)
     return E;
 }
 
-void PrintBoard(int board[N][N]) 
+void PrintBoard(int board[N][N])
 {
-    printf("---------------------\n");
+    printf("-------------------------\n");
     for (int i = 0; i < N; i++)
     {
         printf("| ");
@@ -169,8 +172,13 @@ void PrintBoard(int board[N][N])
             }
             if ((j + 1) % 3 == 0)
             {
-                printf("---------------------\n");
+                printf("| ");
             }
+        }
+        printf("\n");
+        if ((i + 1) % 3 == 0)
+        {
+            printf("-------------------------\n");
         }
     }
 }
@@ -200,11 +208,10 @@ bool FindEmptyCell(int board[N][N], int *row, int *col)
         for (*col = 0; *col < N; (*col)++)
             if (board[*row][*col] == EMPTY)
                 return true;
-
     return false;
 }
 
-bool SolveSudoku(int board[N][N]) 
+bool SolveSudoku(int board[N][N])
 {
     int row, col;
 
@@ -213,29 +220,16 @@ bool SolveSudoku(int board[N][N])
 
     for (int num = 1; num <= 9; num++)
     {
-        if (isValid(board,  row,  col,  num))
+        if (isValid(board, row, col, num))
         {
             board[row][col] = num;
 
-            if(SolveSudoku(board))
+            if (SolveSudoku(board))
                 return true;
 
             board[row][col] = EMPTY;
         }
     }
+
     return false; /* Trigger backtracking */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
